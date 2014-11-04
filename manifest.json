@@ -1,0 +1,15 @@
+{
+    "architecture": "all",
+    "description": "App for reading Hacker News Website",
+    "framework": "ubuntu-sdk-14.10-dev2",
+    "hooks": {
+        "hackernews": {
+            "apparmor": "hackernews.apparmor",
+            "desktop": "hackernews.desktop"
+        }
+    },
+    "maintainer": "Ray Alez <raymestalez@gmail.com>",
+    "name": "com.ubuntu.developer.rayalez.hackernews",
+    "title": "hackernews",
+    "version": "0.1"
+}

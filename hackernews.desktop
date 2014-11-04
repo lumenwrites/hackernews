@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=hackernews
+Exec=qmlscene $@ main.qml
+Icon=hackernews.png
+Terminal=false
+Type=Application
+X-Ubuntu-Touch=true
+
