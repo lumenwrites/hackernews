@@ -94,41 +94,10 @@ Page {
     head.actions: [
     Action {
         iconName: "system-restart-panel"
-        text: i18n.tr("Add")
+        text: i18n.tr("Refresh Stories")
+        onClicked: getTopStories()
     }
     ]
-    
-    // head.contents: Item {
-    //     anchors.fill: parent
-        
-    //     Text {
-    //         text: "Hacker News"
-    //     }
-        
-    //     MouseArea {
-    //         width: refresh_icon.width
-    //         height: refresh_icon.height
-                
-    //         Image {
-    //             id: refresh_icon
-    //             height: units.gu(6)
-    //             width:  units.gu(6)
-                
-    //             smooth: true
-    //             antialiasing: true
-    //             source: "refresh-icon.png"
-    //         }
-    //         onClicked: getTopStories();                
-    //     } // END MouseArea
-        
-    //     Button {
-    //         anchors.verticalCenter: parent.verticalCenter
-    //         text: "refresh stories"
-    //         onClicked: getTopStories()
-    //     }
-        
-    // } // END head.contents
-    
     
     Rectangle {
         id: rectangle
