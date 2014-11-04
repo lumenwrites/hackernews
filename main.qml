@@ -18,9 +18,10 @@ MainView {
      This property enables the application to change orientation
      when the device is rotated. The default is false.
     */
-    //automaticOrientation: true
+    automaticOrientation: true
     
     // Removes the old toolbar and enables new features of the new header.
+    // TODO: Move refresh button to the header:
     useDeprecatedToolbar: false
     
     width: units.gu(100)
@@ -28,7 +29,14 @@ MainView {
     
     property real margins: units.gu(2)
     property real buttonWidth: units.gu(9)
-    
+
+    //backgroundColor : Color.create ("#fffeddb")
+    //backgroundColor : Color.create ("#fffeddb")
+
+
+
+    //footerColor : color
+    //headerColor : "#343C60"
     
     function getTopStories() {
         var xmlhttp = new XMLHttpRequest();
@@ -81,81 +89,172 @@ Component.onCompleted: getTopStories();
 
 Page {
     title: i18n.tr("Hacker News")
-    
-    Rectangle {
-        color: Color.create ("#fffeddb")
-        anchors.fill: parent
-        clip: true
 
-        Column {
-            spacing: units.gu(1)
+    // TODO: Find the list of icons, or add my own icon:
+    // head.actions: [
+    // Action {
+    //     iconName: "refresh-icon.png"
+    //     text: i18n.tr("Add")
+    // }
+    // ]
+    
+    head.contents: Item {
+        anchors.fill: parent
+        
+        Text {
+            text: "Hacker News"
+        }
+        
+        MouseArea {
+            width: refresh_icon.width
+            height: refresh_icon.height
+            //x: units.gu(5)
+            //y: units.gu(8)                        
             
             anchors {
-                margins: units.gu(2)
-                fill: parent
+                top : parent.top;
+                verticalCenter : parent.verticalCenter;
             }
             
-            ListModel {
-                id: model
-            }
-            
-            ListView {
-                id: listview
-                anchors.fill: parent
-                model: model
-                delegate: ListItem.Subtitled {
-                    anchors {
-                        margins: units.gu(8)
-                    }
-                    width: parent.width
-                    height: units.gu(8)
-                    x: units.gu(4)                    
-                    progression: true
-                    onClicked: Qt.openUrlExternally(url);                        
-
-                    MouseArea {
-                        width: comments_icon.width
-                        height: comments_icon.height
-                        Image {
-                            id: comments_icon
-                            x: - units.gu(5)
-                            y: units.gu(2)                        
-                            anchors {
-                                margins: units.gu(8)
-                            }
-                            
-                            height: units.gu(4)
-                            width:  units.gu(4)
-                            
-                            smooth: true
-                            source: "comments-icon.png"
-
-                        }
-                        onClicked: Qt.openUrlExternally("https://news.ycombinator.com/item?id="+id);
-                    }
-                    
-                    text: title
-                    subText: i18n.tr(score + " points by " + author)
-
-                    // Button {
-                        //     anchors { right : parent.right; verticalCenter : parent.verticalCenter;}
-                        //     //text: ">"
-                        //     //                iconSource: Qt.resolvedUrl("/usr/share/icons/ubuntu-mobile/actions/scalable/reload.svg")
-                        //     onClicked: Qt.openUrlExternally(url);
-                        //     // Icon {
-                            //     //     width: 64
-                            //     //     height: 64
-                            //     //     name: "search"
-                            //     //     color: UbuntuColors.white
-                            //     // }
-                            // }
-                        //}
-                        
-                    }
+            Image {
+                id: refresh_icon
+                anchors {
+                    //           margins: units.gu(8)
+                    right : parent.right;
+                    //                    verticalCenter : parent.verticalCenter;
                 }
                 
+                
+                
+                height: units.gu(6)
+                width:  units.gu(6)
+                
+                smooth: true
+                antialiasing: true
+                source: "refresh-icon.png"
             }
+            onClicked: getTopStories();                
         }
-    }
-    
-}
+    } // END head.contents
+
+    // tools: ToolbarItems {
+        //     Button {
+            //         anchors.verticalCenter: parent.verticalCenter
+            //         text: "refresh stories"
+            //         onClicked: getTopStories()
+            //     }
+            // }
+            
+            Rectangle {
+                id: rectangle
+                anchors.centerIn: parent
+                width: units.gu(20)
+                height: units.gu(20)
+                color: UbuntuColors.coolGrey
+            }
+            
+            
+            Rectangle {
+                color: Color.create ("#fffeddb")
+                anchors.fill: parent
+                clip: true
+                
+                Column {            
+                    spacing: units.gu(1)
+                    
+                    anchors {
+                        margins: units.gu(2)
+                        fill: parent
+                    }
+                    
+                    
+                    // MouseArea {
+                        //     width: refresh_icon.width
+                        //     height: refresh_icon.height
+                        //     //x: units.gu(5)
+                        //     //y: units.gu(-10)                        
+                        
+                        //     anchors { top : parent.top; right : parent.right;}
+                        
+                        //     Image {
+                            //         id: refresh_icon
+                            //         anchors {
+                                //             margins: units.gu(8)
+                                //         }
+                                
+                                //         height: units.gu(8)
+                                //         width:  units.gu(8)
+                                
+                                //         smooth: true
+                                //         source: "refresh-icon.png"
+                                //     }
+                                //     onClicked: getTopStories();                
+                                // }
+                                
+                                ListModel {
+                                    id: model
+                                }
+                                
+                                ListView {
+                                    id: listview
+                                    anchors.fill: parent
+                                    model: model
+                                    delegate: ListItem.Subtitled {
+                                        anchors {
+                                            margins: units.gu(8)
+                                        }
+                                        width: parent.width
+                                        height: units.gu(8)
+                                        x: units.gu(4)                    
+                                        progression: true
+                                        onClicked: Qt.openUrlExternally(url);                        
+                                        
+                                        MouseArea {
+                                            width: comments_icon.width
+                                            height: comments_icon.height
+                                            x: - units.gu(5)
+                                            y: units.gu(2)                        
+                                            
+                                            Image {
+                                                id: comments_icon
+                                                anchors {
+                                                    margins: units.gu(8)
+                                                }
+                                                
+                                                height: units.gu(4)
+                                                width:  units.gu(4)
+                                                
+                                                smooth: true
+                                                antialiasing: true
+                                                //mipmap: true
+                                                source: "comments-icon.png"
+                                            }
+                                            onClicked: Qt.openUrlExternally("https://news.ycombinator.com/item?id="+id);
+                                        }
+                                        
+                                        text: title
+                                        subText: i18n.tr(score + " points by " + author)
+                                        
+                                        // Button {
+                                            //     anchors { right : parent.right; verticalCenter : parent.verticalCenter;}
+                                            //     //text: ">"
+                                            //     //                iconSource: Qt.resolvedUrl("/usr/share/icons/ubuntu-mobile/actions/scalable/reload.svg")
+                                            //     onClicked: Qt.openUrlExternally(url);
+                                            //     // Icon {
+                                                //     //     width: 64
+                                                //     //     height: 64
+                                                //     //     name: "search"
+                                                //     //     color: UbuntuColors.white
+                                                //     // }
+                                                // }
+                                                //}
+                                                
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                            
+                        }
+                        
