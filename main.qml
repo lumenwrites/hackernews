@@ -38,10 +38,15 @@ MainView {
     //footerColor : color
     //headerColor : "#343C60"
     
+    
+    // **************** JavaScript Start ****************
+    // Get list of the top stories (id's)
     function getTopStories() {
         var xmlhttp = new XMLHttpRequest();
         var url = "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty";
-        
+
+        listview.model.clear(); // Delete all existing stories from the model to refresh
+
         xmlhttp.onreadystatechange=function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 listStories(xmlhttp.responseText);
@@ -50,7 +55,18 @@ MainView {
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
     }
-    
+
+    // Take list of stories, and get data about each of them
+    function listStories(json) {
+        var obj = JSON.parse(json);
+        //listview.model.append( {jsondata: obj.first +" "+ obj.last })
+        var i = 0;
+        for (i = 0; i < 50; i++) {
+            getStoryData(obj[i]);
+        }
+    }    
+
+    // Take a story and apply "append story" to it.
     function getStoryData(story_id) {
         var xmlhttp = new XMLHttpRequest();
         var url = "https://hacker-news.firebaseio.com/v0/item/"+story_id+".json?print=pretty";
@@ -63,152 +79,117 @@ MainView {
         xmlhttp.open("GET", url, true);
         xmlhttp.send();
     }
-    
+
+    // Take json data about the story, and append it to listview
     function appendStory(json) {
         var obj = JSON.parse(json);
         listview.model.append( {title: obj["title"],
-        score: obj["score"],
-        url: obj["url"],
-        author: obj["by"],
-        id: obj["id"],
-    });
-}
+        						score: obj["score"],
+								url: obj["url"],
+						        author: obj["by"],
+								id: obj["id"]});
+    }    
 
-function listStories(json) {
-    var obj = JSON.parse(json);
-    //listview.model.append( {jsondata: obj.first +" "+ obj.last })
-    var i = 0;
-    for (i = 0; i < 50; i++) {
-        getStoryData(obj[i]);
+    // Test Data
+    property int refresh : 0
+    function testData() {
+        listview.model.clear();
+        var i = 0;
+        for (i; i < 5; i++) {
+            listview.model.append ({
+                title: refresh + " " + "title " + i,
+                score: i,
+                url: "http://example.com/" + i,
+                author: "author " + i,
+                id: i,
+            });
+            console.log("add element " + i)
+        }
+        refresh++;
     }
-    
-    console.log("hi");
-}    
 
-Component.onCompleted: getTopStories();
+    Component.onCompleted: getTopStories();
+    //Component.onCompleted: testData();    
 
-Page {
-    title: i18n.tr("Hacker News")
+    // **************** JavaScript End ****************
+    
+    Page {
+        title: i18n.tr("Hacker News")
+        
+        //TODO: Find the list of icons, or add my own icon:
+        head.actions: [
+        Action {
+            iconName: "system-restart-panel"
+            text: i18n.tr("Refresh Stories")
+            onTriggered: {
+                getTopStories()
+                //testData();    
+                console.log("Click refresh stories")
+            }
+        }
+        ]
+        
+        
+        Rectangle {
+            //color: Color.create ("#fffeddb")
+            anchors.fill: parent
+            clip: true
 
-    //TODO: Find the list of icons, or add my own icon:
-    head.actions: [
-    Action {
-        iconName: "system-restart-panel"
-        text: i18n.tr("Refresh Stories")
-        onClicked: getTopStories()
-    }
-    ]
-    
-    Rectangle {
-        id: rectangle
-        anchors.centerIn: parent
-        width: units.gu(20)
-        height: units.gu(20)
-        color: UbuntuColors.coolGrey
-    }
-    
-            
-            Rectangle {
-                //color: Color.create ("#fffeddb")
-                anchors.fill: parent
-                clip: true
+            Column {            
+                spacing: units.gu(1)
+                width: parent.width - units.gu(4)
+                height: parent.height
+                x: units.gu(4)
+
+                anchors {
+                    margins: units.gu(32)
+                }
                 
-                Column {            
-                    spacing: units.gu(1)
-                    
-                    // anchors {
-                    //     margins: units.gu(2)
-                    //     fill: parent
-                    // }
-                    
-                    
-                    // MouseArea {
-                        //     width: refresh_icon.width
-                        //     height: refresh_icon.height
-                        //     //x: units.gu(5)
-                        //     //y: units.gu(-10)                        
-                        
-                        //     anchors { top : parent.top; right : parent.right;}
-                        
-                        //     Image {
-                            //         id: refresh_icon
-                            //         anchors {
-                                //             margins: units.gu(8)
-                                //         }
-                                
-                                //         height: units.gu(8)
-                                //         width:  units.gu(8)
-                                
-                                //         smooth: true
-                                //         source: "refresh-icon.png"
-                                //     }
-                                //     onClicked: getTopStories();                
-                                // }
-                                
-                                ListModel {
-                                    id: model
-                                }
-                                
-                                ListView {
-                                    id: listview
-                                    anchors.fill: parent
-                                    model: model
-                                    delegate: ListItem.Subtitled {
-                                        anchors {
-                                            margins: units.gu(8)
-                                        }
-                                        width: parent.width
-                                        height: units.gu(8)
-                                        x: units.gu(4)                    
-                                        progression: true
-                                        onClicked: Qt.openUrlExternally(url);                        
-                                        
-                                        MouseArea {
-                                            width: comments_icon.width
-                                            height: comments_icon.height
-                                            x: - units.gu(5)
-                                            y: units.gu(2)                        
-                                            
-                                            Image {
-                                                id: comments_icon
-                                                anchors {
-                                                    margins: units.gu(8)
-                                                }
-                                                
-                                                height: units.gu(4)
-                                                width:  units.gu(4)
-                                                
-                                                smooth: true
-                                                antialiasing: true
-                                                //mipmap: true
-                                                source: "comments-icon.png"
-                                            }
-                                            onClicked: Qt.openUrlExternally("https://news.ycombinator.com/item?id="+id);
-                                        }
-                                        
-                                        text: title
-                                        subText: i18n.tr(score + " points by " + author)
-                                        
-                                        // Button {
-                                            //     anchors { right : parent.right; verticalCenter : parent.verticalCenter;}
-                                            //     //text: ">"
-                                            //     //                iconSource: Qt.resolvedUrl("/usr/share/icons/ubuntu-mobile/actions/scalable/reload.svg")
-                                            //     onClicked: Qt.openUrlExternally(url);
-                                            //     // Icon {
-                                                //     //     width: 64
-                                                //     //     height: 64
-                                                //     //     name: "search"
-                                                //     //     color: UbuntuColors.white
-                                                //     // }
-                                                // }
-                                                //}
-                                                
-                                            }
-                                        }
-                                        
-                                    }
-                                }
-                            }
-                            
+                ListModel {
+                    id: model
+                }
+                
+                ListView {
+                    id: listview
+                    anchors.fill: parent
+                    model: model
+                    delegate: ListItem.Subtitled {
+                        anchors {
+                            margins: units.gu(8)
                         }
+                        width: parent.width
+                        height: units.gu(8)
+                        //x: units.gu(4)                    
+                        progression: true
                         
+                        MouseArea {
+                            width: comments_icon.width
+                            height: comments_icon.height
+                            x: - units.gu(5)
+                            y: units.gu(2)                        
+                            onClicked: Qt.openUrlExternally("https://news.ycombinator.com/item?id="+id);
+
+                            Image {
+                                id: comments_icon
+                                anchors {
+                                    margins: units.gu(8)
+                                }
+                                height: units.gu(4)
+                                width:  units.gu(4)
+                                smooth: true
+                                antialiasing: true
+                                //mipmap: true
+                                source: "comments-icon.png"
+                            }
+                        } // END MouseArea
+
+                        text: title
+                        subText: i18n.tr(score + " points by " + author)
+                        onClicked: Qt.openUrlExternally(url);                        
+                        
+                    }
+                }
+            }
+        }
+    }
+}
