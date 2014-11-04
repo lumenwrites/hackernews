@@ -90,82 +90,67 @@ Component.onCompleted: getTopStories();
 Page {
     title: i18n.tr("Hacker News")
 
-    // TODO: Find the list of icons, or add my own icon:
-    // head.actions: [
-    // Action {
-    //     iconName: "refresh-icon.png"
-    //     text: i18n.tr("Add")
-    // }
-    // ]
+    //TODO: Find the list of icons, or add my own icon:
+    head.actions: [
+    Action {
+        iconName: "system-restart-panel"
+        text: i18n.tr("Add")
+    }
+    ]
     
-    head.contents: Item {
-        anchors.fill: parent
+    // head.contents: Item {
+    //     anchors.fill: parent
         
-        Text {
-            text: "Hacker News"
-        }
+    //     Text {
+    //         text: "Hacker News"
+    //     }
         
-        MouseArea {
-            width: refresh_icon.width
-            height: refresh_icon.height
-            //x: units.gu(5)
-            //y: units.gu(8)                        
-            
-            anchors {
-                top : parent.top;
-                verticalCenter : parent.verticalCenter;
-            }
-            
-            Image {
-                id: refresh_icon
-                anchors {
-                    //           margins: units.gu(8)
-                    right : parent.right;
-                    //                    verticalCenter : parent.verticalCenter;
-                }
+    //     MouseArea {
+    //         width: refresh_icon.width
+    //         height: refresh_icon.height
                 
+    //         Image {
+    //             id: refresh_icon
+    //             height: units.gu(6)
+    //             width:  units.gu(6)
                 
-                
-                height: units.gu(6)
-                width:  units.gu(6)
-                
-                smooth: true
-                antialiasing: true
-                source: "refresh-icon.png"
-            }
-            onClicked: getTopStories();                
-        }
-    } // END head.contents
-
-    // tools: ToolbarItems {
-        //     Button {
-            //         anchors.verticalCenter: parent.verticalCenter
-            //         text: "refresh stories"
-            //         onClicked: getTopStories()
-            //     }
-            // }
+    //             smooth: true
+    //             antialiasing: true
+    //             source: "refresh-icon.png"
+    //         }
+    //         onClicked: getTopStories();                
+    //     } // END MouseArea
+        
+    //     Button {
+    //         anchors.verticalCenter: parent.verticalCenter
+    //         text: "refresh stories"
+    //         onClicked: getTopStories()
+    //     }
+        
+    // } // END head.contents
+    
+    
+    Rectangle {
+        id: rectangle
+        anchors.centerIn: parent
+        width: units.gu(20)
+        height: units.gu(20)
+        color: UbuntuColors.coolGrey
+    }
+    
             
             Rectangle {
-                id: rectangle
-                anchors.centerIn: parent
-                width: units.gu(20)
-                height: units.gu(20)
-                color: UbuntuColors.coolGrey
-            }
-            
-            
-            Rectangle {
-                color: Color.create ("#fffeddb")
+                //color: Color.create ("#fffeddb")
                 anchors.fill: parent
                 clip: true
                 
                 Column {            
                     spacing: units.gu(1)
                     
-                    anchors {
-                        margins: units.gu(2)
-                        fill: parent
-                    }
+                    // anchors {
+                    //     margins: units.gu(2)
+                    //     fill: parent
+                    // }
                     
                     
                     // MouseArea {
