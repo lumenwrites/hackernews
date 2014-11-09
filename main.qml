@@ -95,9 +95,7 @@ PageStack {
             iconName: "system-restart-panel"
             text: i18n.tr("Refresh Stories")
             onTriggered: {
-                getTopStories()
-                //testData();    
-                console.log("Click refresh stories")
+                Logic.getTopStories();
             }
         }
         ]
@@ -207,18 +205,16 @@ PageStack {
         },
         Action {
             iconSource: "icons/globe-icon.png"
-            text: i18n.tr("Open Comments in the Browser")
+            text: i18n.tr("Open in browser")
             onTriggered: {
-                Qt.openUrlExternally(comments_url);                
+                Qt.openUrlExternally(comments_page.comments_url);                
             }
         },
         Action {
             iconName: "system-restart-panel"
-            text: i18n.tr("Refresh Comments Stories")
+            text: i18n.tr("Refresh")
             onTriggered: {
-                getTopStories()
-                //testData();    
-                console.log("Click refresh stories")
+                CommentsJs.createCommentsModel(comments_page.story_id);
             }
         }        
         ]
