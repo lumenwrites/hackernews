@@ -80,7 +80,7 @@ import "comments.js" as CommentsJs
                                 }
                                 Row {
                                     id: row
-                                    Item {
+                                    Item { // Expander Arrow
                                         width: rowHeight
                                         height: rowHeight
                                         opacity: !!model.elements ? 1 : 0
@@ -92,12 +92,12 @@ import "comments.js" as CommentsJs
                                             rotation: loader.expanded ? 90 : 0
                                             Behavior on rotation {NumberAnimation { duration: 120}}
                                         }
-                                        MouseArea {
-                                            id: mouse
-                                            anchors.fill: parent
-                                            hoverEnabled: true
-                                            onClicked: loader.expanded = !loader.expanded
-                                        }
+                                    }
+                                    MouseArea {
+                                        id: mouse
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onClicked: loader.expanded = !loader.expanded
                                     }
                                     Loader {
                                         property var model: _model
