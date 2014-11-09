@@ -47,7 +47,7 @@ MainView {
 PageStack {
     id: pageStack
     // Open Main Page:
-    // Component.onCompleted: push(main_page)
+    //Component.onCompleted: push(main_page)
     // Open Comments page:
     Component.onCompleted: push(comments_page, {story_id: 8863})
 
@@ -93,15 +93,6 @@ PageStack {
                 //testData();    
                 console.log("Click refresh stories")
             }
-        },
-        Action {
-            iconSource: "icons/globe-icon.png"
-            text: i18n.tr("Refresh Stories")
-            onTriggered: {
-                getTopStories()
-                //testData();    
-                console.log("Click refresh stories")
-            }
         }
         ]
         
@@ -115,8 +106,8 @@ PageStack {
                 spacing: units.gu(1)
                 // Commented out to remove error in terminal
                 // Uncomment if main view stops working:
-                //width: parent.width - units.gu(4)
-                //height: parent.height
+                width: parent.width - units.gu(4)
+                height: parent.height
                 x: units.gu(4)
 
                 anchors {
@@ -151,6 +142,8 @@ PageStack {
                             // Open Comments page:
                             onClicked: pageStack.push(comments_page, {story_id: id,
 												                      article_url: url,
+                                  									  story_title: title,
+                                  									  story_text: story_text,
 												                      comments_url: comments_url
                               })
                         
@@ -182,16 +175,34 @@ PageStack {
 
      // **************** Comments Page Start ****************
     Page {
-        title: "Commens " + story_id
+        title: "Commens: " + story_title
         id: comments_page
         visible: false
         property int story_id
+        property string story_title
+        property string story_text
         property string article_url
-        property string comments_url       
+        property string comments_url
+
 
         //Component.onCompleted: Logic.listComments(8863); //(story_id);
 
         head.actions: [
+        Action {
+            iconSource: "icons/read-article-icon.png"
+            text: i18n.tr("Open Article in the Browser")
+            onTriggered: {
+                console.log("Open " + comments_page.article_url);
+                Qt.openUrlExternally(comments_page.article_url);                
+            }
+        },
+        Action {
+            iconSource: "icons/globe-icon.png"
+            text: i18n.tr("Open Comments in the Browser")
+            onTriggered: {
+                Qt.openUrlExternally(comments_url);                
+            }
+        },
         Action {
             iconName: "system-restart-panel"
             text: i18n.tr("Refresh Comments Stories")
@@ -200,88 +211,47 @@ PageStack {
                 //testData();    
                 console.log("Click refresh stories")
             }
-        },
-        // Action {
-        //     iconSource: "icons/globe-icon.png"
-        //     text: i18n.tr("Open Comments in the Browser")
-        //     onTriggered: {
-        //         Qt.openUrlExternally(comments_url);                
-        //     }
-        // },
-        Action {
-            iconSource: "icons/read-article-icon.png"
-            text: i18n.tr("Open Article in the Browser")
-            onTriggered: {
-                console.log("Open " + comments_page.article_url);
-                Qt.openUrlExternally(comments_page.article_url);                
-            }
-        }
-        
+        }        
         ]
+        
 
-        // WebView {
-        //     id: web_comments
-        //     anchors.fill: parent
-        //     url: comments_page.comments_url
-        //     scale: 1
-        //     visible: true
-        // }
-
+        Rectangle {
+            width: parent.width
+            height: 50
+            color: "red"
+        }
         
         Rectangle {
             color: "#FEEDDB"
             anchors.fill: parent
             clip: true
-            //Component.onCompleted: Logic.createCommentsModel ();
-
-            //Component.onCompleted: CommentsJs.fakeJsonDataModel();//listComments(8863);
+            
+            
             Component.onCompleted: CommentsJs.createCommentsModel(8863);
-            Column {            
-                spacing: units.gu(1)
-                width: parent.width - units.gu(4)
+            Column {
+                width: parent.width
                 height: parent.height
-                x: units.gu(4)
-
+                
                 anchors {
                     margins: units.gu(32)
                 }
                 
                 
                 ListModel {
-                     id: treemodel
+                    id: treemodel
                 }
-
+                
+                
                 
                 TreeView {
-                    anchors.fill: parent
                     model: treemodel
+                    textWidth: parent.width
+                    story_text: story_text
                 }
-
-                // ListModel {
-                //     id: comments_model
-                // }
-
-                // ListView {
-                //     id: comments_listview
-                //     anchors.fill: parent
-                //     model: comments_model
-                //     delegate: ListItem.Subtitled {
-                //         anchors {
-                //             margins: units.gu(8)
-                //         }
-                //         width: parent.width
-                //         height: units.gu(8)
-                //         text: comment_text
-                //     }                    
-                    
-                // }
             }            
-
+            
         } // End Rectangle
-
     } // End Comments Page
     // **************** Comments Page End ****************
-
-
 } //End PageStack
 }

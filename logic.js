@@ -43,11 +43,12 @@
     function appendStory(json) {
         var obj = JSON.parse(json);
         listview.model.append( {title: obj["title"],
-        						score: obj["score"],
-								url: obj["url"],
-								comments_url: "https://news.ycombinator.com/item?id=" + obj["id"],
-						        author: obj["by"],
-								id: obj["id"]});
+        			score: obj["score"],
+				url: obj["url"],
+				comments_url: "https://news.ycombinator.com/item?id=" + obj["id"],
+				author: obj["by"],
+				story_text: obj["text"],
+				id: obj["id"]});
     }    
 
     // Test Data
