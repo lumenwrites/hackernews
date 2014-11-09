@@ -32,25 +32,37 @@ function appendTopLvlComment(comment_id){
 	if (commentRequest.readyState == 4 && commentRequest.status == 200) {
 	    //**************** Once I have comment Data ****************
 	    var comment = JSON.parse(commentRequest.responseText);
-	    
+
 	    if (!comment["dead"]) {
-		// Append Coment
-		treemodel.append( {text: comment["text"],
-				   elements : []});
-		
-		//Get last appended comment
-		var lvl1node = treemodel.get(treemodel.count - 1);
-		var hasKids = !(comment["kids"]===undefined);
-		
-		if (hasKids) {
-		    var i = 0;
-		    for (i = 0; i < comment["kids"].length ; i++) {
-			var child_id = comment["kids"][i];
-			recursiveAppendComments(lvl1node, child_id);
-		    } // End top for loop.
-		}
-		//****************
+		var comment_text = comment["text"];
+	    } else {
+		var comment_text = "[dead]";
 	    }
+
+	    // Append Comment
+	    var hasKids = !(comment["kids"]===undefined);
+	    if (hasKids) {	    
+		treemodel.append( {text: comment_text,
+				   author: comment["by"],
+				   time: comment["time"],
+				   elements : []});
+	    } else {
+		treemodel.append( {text: comment_text,
+				   author: comment["by"],
+				   time: comment["time"]});
+	    }
+		
+	    //Get last appended comment
+	    var lvl1node = treemodel.get(treemodel.count - 1);
+	    
+	    if (hasKids) {
+		var i = 0;
+		for (i = 0; i < comment["kids"].length ; i++) {
+		    var child_id = comment["kids"][i];
+		    recursiveAppendComments(lvl1node, child_id);
+		} // End top for loop.
+	    }
+	    //****************
 	}
     }// End get comemnt data
     commentRequest.open("GET", url, true);
@@ -67,26 +79,36 @@ function recursiveAppendComments(parent, comment_id){
 	    var comment = JSON.parse(commentRequest.responseText);
 	    
 	    if (!comment["dead"]) {
-		// Append Coment
-		parent.elements.append( {text: comment["text"],
-				   elements : []});
-
-		//Get last appended comment
-		parent = parent.elements.get(parent.elements.count - 1);
-
-		var hasKids = !(comment["kids"]===undefined);
-		
-		if (hasKids) {
-		    //Launch Recursion for all the children
-		    var i = 0;
-		    for (i = 0; i < comment["kids"].length ; i++) {
-			var child_id = comment["kids"][i];
-			recursiveAppendComments(parent, child_id);
-		    } // End top for loop.
-		    
-		}
-		//****************
+		var comment_text = comment["text"];
+	    } else {
+		var comment_text = "[dead]";
 	    }
+	    // Append Coment
+	    var hasKids = !(comment["kids"]===undefined);
+	    if (hasKids) {
+		parent.elements.append( {text: comment_text,
+					 author: comment["by"],
+					 time: comment["time"],
+					 elements : []});
+	    } else {
+		parent.elements.append( {text: comment_text,
+					 author: comment["by"],
+					 time: comment["time"]});
+	    }
+	    //Get last appended comment
+	    parent = parent.elements.get(parent.elements.count - 1);
+	    
+	    
+	    if (hasKids) {
+		//Launch Recursion for all the children
+		var i = 0;
+		for (i = 0; i < comment["kids"].length ; i++) {
+		    var child_id = comment["kids"][i];
+		    recursiveAppendComments(parent, child_id);
+		} // End top for loop.
+		
+	    }
+	    //****************
 	}
     }// End get comemnt data
     commentRequest.open("GET", url, true);
