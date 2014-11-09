@@ -26,10 +26,9 @@
     }    
 
     // Take a story and apply "append story" to it.
-    function getStoryData(story_id) {
+function getStoryData(story_id) {
         var xmlhttp = new XMLHttpRequest();
-        var url = "https://hacker-news.firebaseio.com/v0/item/"+story_id+".json?print=pretty";
-        
+        var url = "https://hacker-news.firebaseio.com/v0/item/"+story_id+".json";
         xmlhttp.onreadystatechange=function() {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                 appendStory(xmlhttp.responseText);

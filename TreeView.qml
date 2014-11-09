@@ -10,14 +10,35 @@ Flickable {
     id: root
     property var model
     property int textWidth
+    property string story_title    
     property string story_text
     anchors.fill: parent
     anchors.margins: units.gu(0)
     contentHeight: content.height
     contentWidth: content.width
+
+    Rectangle {
+        opacity: (story_text.length > 1) ?  1:0
+        Column {
+            id: storyDescription
+            x : units.gu(2)
+            y : units.gu(2)
+            Text {
+                text: "<b>" + story_title + "</b>"
+            }        
+            Text {
+                id: storyText
+                text: story_text
+                width: textWidth - units.gu(8)
+                font.pixelSize: units.gu(2)            
+                wrapMode: Text.WordWrap
+            }
+        }
+    }
     // Load recursive component for the first time. Top lvl.
     Loader {
         id: content
+        y: (story_text.length > 1) ?  (storyDescription.implicitHeight+units.gu(4)) : 0
         height: implicitHeight
         sourceComponent: treeBranch
         property bool expanded: true

@@ -1,11 +1,16 @@
 // **************** Comments JavaScript Start ****************
+
+function printStoryId(story_id) {
+    console.log("story id is: " + story_id);
+}
+
 function createCommentsModel(story_id) {
     treemodel.clear();
 
     //Get Story data
     var storyRequest = new XMLHttpRequest();
-    //var url = "https://hacker-news.firebaseio.com/v0/item/"+story_id+".json";
-    var url = "https://hacker-news.firebaseio.com/v0/item/8863.json"
+    var url = "https://hacker-news.firebaseio.com/v0/item/"+story_id+".json";
+    //var url = "https://hacker-news.firebaseio.com/v0/item/8863.json"
     storyRequest.onreadystatechange=function() {
         if (storyRequest.readyState == 4 && storyRequest.status == 200) {
 	    //Once I have data, create top lvl of comments

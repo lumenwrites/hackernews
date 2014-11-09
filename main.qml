@@ -47,9 +47,15 @@ MainView {
 PageStack {
     id: pageStack
     // Open Main Page:
-    //Component.onCompleted: push(main_page)
+    Component.onCompleted: push(main_page)
     // Open Comments page:
-    Component.onCompleted: push(comments_page, {story_id: 8863})
+    // Component.onCompleted: pageStack.push(comments_page, {
+    //     story_id: 8863,
+    //     article_url: url,
+    //     story_title: title,
+    //     story_text: story_text,
+    //     comments_url: comments_url})
+                              
 
     // **************** Main Page Start ****************
     Page {
@@ -140,12 +146,15 @@ PageStack {
                             // Open Comments in the browser:
                             //onClicked: Qt.openUrlExternally("https://news.ycombinator.com/item?id="+id);                            
                             // Open Comments page:
-                            onClicked: pageStack.push(comments_page, {story_id: id,
+                            onClicked: {
+                                pageStack.push(comments_page, {story_id: id,
 												                      article_url: url,
                                   									  story_title: title,
                                   									  story_text: story_text,
 												                      comments_url: comments_url
-                              })
+                              });
+                              CommentsJs.createCommentsModel(comments_page.story_id);
+                              }
                         
 
                             Image {
@@ -175,7 +184,7 @@ PageStack {
 
      // **************** Comments Page Start ****************
     Page {
-        title: "Commens: " + story_title
+        title: "Comments: " + story_title
         id: comments_page
         visible: false
         property int story_id
@@ -184,8 +193,8 @@ PageStack {
         property string article_url
         property string comments_url
 
-
-        //Component.onCompleted: Logic.listComments(8863); //(story_id);
+        //Only for testing purposes, otherwise do this in on_clidked event in main page:
+        //Component.onCompleted: CommentsJs.createCommentsModel(8863);
 
         head.actions: [
         Action {
@@ -226,8 +235,7 @@ PageStack {
             anchors.fill: parent
             clip: true
             
-            
-            Component.onCompleted: CommentsJs.createCommentsModel(8863);
+
             Column {
                 width: parent.width
                 height: parent.height
@@ -246,7 +254,8 @@ PageStack {
                 TreeView {
                     model: treemodel
                     textWidth: parent.width
-                    story_text: story_text
+                    story_text: comments_page.story_text
+                    story_title: comments_page.story_title
                 }
             }            
             
