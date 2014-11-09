@@ -4,6 +4,7 @@ import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Web 0.2
 import "logic.js" as Logic
+import "comments.js" as CommentsJs
 
 /*!
     \brief MainView with a Label and Button elements.
@@ -188,7 +189,7 @@ PageStack {
         property string article_url
         property string comments_url       
 
-        Component.onCompleted: Logic.listComments(8863); //(story_id);
+        //Component.onCompleted: Logic.listComments(8863); //(story_id);
 
         head.actions: [
         Action {
@@ -231,6 +232,10 @@ PageStack {
             color: "#FEEDDB"
             anchors.fill: parent
             clip: true
+            //Component.onCompleted: Logic.createCommentsModel ();
+
+            //Component.onCompleted: CommentsJs.fakeJsonDataModel();//listComments(8863);
+            Component.onCompleted: listComments(8863);
             Column {            
                 spacing: units.gu(1)
                 width: parent.width - units.gu(4)
@@ -241,24 +246,36 @@ PageStack {
                     margins: units.gu(32)
                 }
                 
-                ListModel {
-                    id: comments_model
-                }
                 
-                ListView {
-                    id: comments_listview
+                ListModel {
+                     id: treemodel
+                }
+
+                
+                TreeView {
                     anchors.fill: parent
-                    model: comments_model
-                    delegate: ListItem.Subtitled {
-                        anchors {
-                            margins: units.gu(8)
-                        }
-                        width: parent.width
-                        height: units.gu(8)
-                        text: comment_text
-                    }                    
+                    model: treemodel
+                }
+
+                // ListModel {
+                //     id: comments_model
+                // }
+
+                // ListView {
+                //     id: comments_listview
+                //     anchors.fill: parent
+                //     model: comments_model
+                //     delegate: ListItem.Subtitled {
+                //         anchors {
+                //             margins: units.gu(8)
+                //         }
+                //         width: parent.width
+                //         height: units.gu(8)
+                //         text: comment_text
+                //     }                    
                     
-                }}            
+                // }
+            }            
 
         } // End Rectangle
 

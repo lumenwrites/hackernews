@@ -5,12 +5,13 @@ import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Web 0.2
 import "logic.js" as Logic
+import "comments.js" as CommentsJs
 
     ScrollView {
         id: view
         
         property var model
-        property int rowHeight: 19
+        property int rowHeight: 190
         property int columnIndent: 22
         property var currentNode
         property var currentItem
@@ -27,6 +28,7 @@ import "logic.js" as Logic
         
         contentItem: Loader {
             id: content
+            
             onLoaded: item.isRoot = true
             sourceComponent: treeBranch
             property var elements: model
@@ -101,7 +103,6 @@ import "logic.js" as Logic
                                         property var model: _model
                                         sourceComponent: delegate
                                         anchors.verticalCenter: parent.verticalCenter
-                                        //expanded : true
                                     }
                                 }
                                 Loader {
@@ -109,7 +110,7 @@ import "logic.js" as Logic
                                     x: columnIndent
                                     height: expanded ? implicitHeight : 0
                                     property var node: model
-                                    property bool expanded: false
+                                    property bool expanded: true
                                     property var elements: model.elements
                                     property var text: model.text
                                     sourceComponent: (expanded && !!model.elements) ? treeBranch : undefined

@@ -5,12 +5,13 @@ import Ubuntu.Components 1.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Web 0.2
 import "logic.js" as Logic
+import "comments.js" as CommentsJs
 
     ScrollView {
         id: view
         
         property var model
-        property int rowHeight: 19
+        property int rowHeight: 190
         property int columnIndent: 22
         property var currentNode
         property var currentItem
