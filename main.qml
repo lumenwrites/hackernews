@@ -235,7 +235,7 @@ PageStack {
             //Component.onCompleted: Logic.createCommentsModel ();
 
             //Component.onCompleted: CommentsJs.fakeJsonDataModel();//listComments(8863);
-            Component.onCompleted: listComments(8863);
+            Component.onCompleted: CommentsJs.createCommentsModel(8863);
             Column {            
                 spacing: units.gu(1)
                 width: parent.width - units.gu(4)
