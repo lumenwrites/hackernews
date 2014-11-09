@@ -1,5 +1,5 @@
 import QtQuick 2.1
-import QtQuick.Controls 1.0
+//import QtQuick.Controls 1.0
 import Ubuntu.Components 1.1
 //import Ubuntu.Components 1.1 as Toolkit
 import Ubuntu.Components.ListItems 0.1 as ListItem
@@ -90,6 +90,7 @@ Flickable {
                                 width: textWidth
                                 wrapMode: Text.WordWrap
                                 font.pixelSize: units.gu(2)
+                                //onLinkActivated: Qt.openUrlExternally(link)
                             }
                                 
                                 Loader {

@@ -23,7 +23,41 @@ function getTopStories() {
         for (i = 0; i < 50; i++) {
             getStoryData(obj[i]);
         }
-    }    
+    }
+
+function getAskHN() {
+        listview.model.clear(); // Delete all existing stories from the model to refresh
+    
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://hacker-news.firebaseio.com/v0/maxitem.json";
+
+        xmlhttp.onreadystatechange=function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                var maxItem = JSON.parse(xmlhttp.responseText);
+		var i = maxItem;
+		while (i > (maxItem - 250)) {
+		    getAskHNData(i);
+		    i--;
+		}
+            }
+        }
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+}
+
+function getAskHNData(story_id) {
+        var xmlhttp = new XMLHttpRequest();
+        var url = "https://hacker-news.firebaseio.com/v0/item/"+story_id+".json";
+        xmlhttp.onreadystatechange=function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                appendStory(xmlhttp.responseText);
+            }
+        }
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+    }
+
+
 
     // Take a story and apply "append story" to it.
 function getStoryData(story_id) {

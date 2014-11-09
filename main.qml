@@ -42,19 +42,14 @@ MainView {
     //headerColor : "#343C60"
     
     Component.onCompleted: Logic.getTopStories();
+    //Component.onCompleted: Logic.getAskHN();    
     //Component.onCompleted: testData();        
     
 PageStack {
     id: pageStack
     // Open Main Page:
     Component.onCompleted: push(main_page)
-    // Open Comments page:
-    // Component.onCompleted: pageStack.push(comments_page, {
-    //     story_id: 8863,
-    //     article_url: url,
-    //     story_title: title,
-    //     story_text: story_text,
-    //     comments_url: comments_url})
+
                               
 
     // **************** Main Page Start ****************
