@@ -13,23 +13,23 @@ import "comments.js" as CommentsJs
 MainView {
     // objectName for functional testing purposes (autopilot-qt5)
     objectName: "mainView"
-    
+
     // Note! applicationName needs to match the "name" field of the click manifest
     applicationName: "com.ubuntu.developer.rayalez.hackernews"
-    
+
     /*
      This property enables the application to change orientation
      when the device is rotated. The default is false.
     */
     automaticOrientation: true
-    
+
     // Removes the old toolbar and enables new features of the new header.
     // TODO: Move refresh button to the header:
     useDeprecatedToolbar: false
-    
+
     width: units.gu(100)
     height: units.gu(75)
-    
+
     property real margins: units.gu(2)
     property real buttonWidth: units.gu(9)
 
@@ -40,17 +40,17 @@ MainView {
 
     //footerColor : color
     //headerColor : "#343C60"
-    
+
     Component.onCompleted: Logic.getTopStories();
-    //Component.onCompleted: Logic.getAskHN();    
-    //Component.onCompleted: testData();        
-    
+    //Component.onCompleted: Logic.getAskHN();
+    //Component.onCompleted: testData();
+
 PageStack {
     id: pageStack
     // Open Main Page:
     Component.onCompleted: push(main_page)
 
-                              
+
 
     // **************** Main Page Start ****************
     Page {
@@ -94,14 +94,14 @@ PageStack {
             }
         }
         ]
-        
-        
+
+
         Rectangle {
             color: "#FEEDDB"
             anchors.fill: parent
             clip: true
 
-            Column {            
+            Column {
                 spacing: units.gu(1)
                 // Commented out to remove error in terminal
                 // Uncomment if main view stops working:
@@ -112,11 +112,11 @@ PageStack {
                 anchors {
                     margins: units.gu(32)
                 }
-                
+
                 ListModel {
                     id: model
                 }
-                
+
                 ListView {
                     id: listview
                     anchors.fill: parent
@@ -127,9 +127,9 @@ PageStack {
                         }
                         width: parent.width
                         height: units.gu(8)
-                        //x: units.gu(4)                    
+                        //x: units.gu(4)
                         progression: true
-                        
+
                         MouseArea {
                             width: comments_icon.width
                             height: comments_icon.height
@@ -137,7 +137,7 @@ PageStack {
                             y: units.gu(2)
 
                             // Open Comments in the browser:
-                            //onClicked: Qt.openUrlExternally("https://news.ycombinator.com/item?id="+id);                            
+                            //onClicked: Qt.openUrlExternally("https://news.ycombinator.com/item?id="+id);
                             // Open Comments page:
                             onClicked: {
                                 pageStack.push(comments_page, {story_id: id,
@@ -148,7 +148,7 @@ PageStack {
                               });
                               CommentsJs.createCommentsModel(comments_page.story_id);
                               }
-                        
+
 
                             Image {
                                 id: comments_icon
@@ -161,11 +161,23 @@ PageStack {
                                 antialiasing: true
                                 //mipmap: true
                                 source: "icons/comments-icon.png"
+
+                                // Number of comments.Needs to check all comments recursively?
+                                // Text {
+                                //     anchors {
+                                //         verticalCenter: parent.verticalCenter
+                                //         verticalCenterOffset : -1
+                                //         horizontalCenter: parent.horizontalCenter
+                                //     }
+                                //     font.pixelSize: units.gu(1.5)
+                                //     text: number_of_comments
+                                //     color: "white"
+                                // }
                             }
                         } // END MouseArea
 
                         text: title
-                        subText: i18n.tr(score + " points by " + author)
+                        subText: i18n.tr(score + " points by " + author + " " + time_ago)
                         // Open Article in the browser:
                         onClicked: Qt.openUrlExternally(url);
                     }
@@ -177,7 +189,7 @@ PageStack {
 
      // **************** Comments Page Start ****************
     Page {
-        title: "Comments: " + story_title
+        title: story_title //"Comments: " +
         id: comments_page
         visible: false
         property int story_id
@@ -195,14 +207,14 @@ PageStack {
             text: i18n.tr("Open Article in the Browser")
             onTriggered: {
                 console.log("Open " + comments_page.article_url);
-                Qt.openUrlExternally(comments_page.article_url);                
+                Qt.openUrlExternally(comments_page.article_url);
             }
         },
         Action {
             iconSource: "icons/globe-icon.png"
             text: i18n.tr("Open in browser")
             onTriggered: {
-                Qt.openUrlExternally(comments_page.comments_url);                
+                Qt.openUrlExternally(comments_page.comments_url);
             }
         },
         Action {
@@ -211,45 +223,45 @@ PageStack {
             onTriggered: {
                 CommentsJs.createCommentsModel(comments_page.story_id);
             }
-        }        
+        }
         ]
-        
+
 
         Rectangle {
             width: parent.width
             height: 50
             color: "red"
         }
-        
+
         Rectangle {
             color: "#FEEDDB"
             anchors.fill: parent
             clip: true
-            
+
 
             Column {
                 width: parent.width
                 height: parent.height
-                
+
                 anchors {
                     margins: units.gu(32)
                 }
-                
-                
+
+
                 ListModel {
                     id: treemodel
                 }
-                
-                
-                
+
+
+
                 TreeView {
                     model: treemodel
                     textWidth: parent.width
                     story_text: comments_page.story_text
                     story_title: comments_page.story_title
                 }
-            }            
-            
+            }
+
         } // End Rectangle
     } // End Comments Page
     // **************** Comments Page End ****************

@@ -16,7 +16,8 @@ Flickable {
     anchors.margins: units.gu(0)
     contentHeight: content.height
     contentWidth: content.width
-
+    flickableDirection: Flickable.VerticalFlick
+    
     Rectangle {
         opacity: (story_text.length > 1) ?  1:0
         Column {
@@ -57,12 +58,12 @@ Flickable {
                 model: elements
                 Rectangle {
                     width: textWidth + units.gu(4)
-                    height: expanded ? (comment_text.paintedHeight + loader.implicitHeight + units.gu(1)) : 0
+                    height: expanded ? (comment_author.paintedHeight + comment_text.paintedHeight + loader.implicitHeight + units.gu(1)) : 0
                     clip: true
                     color:  Qt.rgba(0,0,0,0)
 
                     Rectangle {
-                        width: units.gu(3.5)
+                        width: units.gu(1.8)
                         height: parent.height
                         color: "gray"
                         opacity: 0.2
@@ -80,17 +81,31 @@ Flickable {
                         }
                         
                         Column {
-                            x: units.gu(4)
+                            x: units.gu(2)
                             spacing: units.gu(1)
-                            height: comment_text.paintedHeight + loader.implicitHeight + units.gu(1)
-                            
-                            Text {
-                                id: comment_text
-                                text: "<i>" + model.author + "</i> <br/>" + model.text
-                                width: textWidth
-                                wrapMode: Text.WordWrap
-                                font.pixelSize: units.gu(2)
-                                //onLinkActivated: Qt.openUrlExternally(link)
+                            //height: comment_text.paintedHeight + loader.implicitHeight + units.gu(1)
+                           height: comment_author.paintedHeight + comment_text.paintedHeight + loader.implicitHeight + units.gu(1)
+                            Column {
+                                id: comment_column
+                                Text {
+                                    id: comment_author
+                                    text: "<i>" + model.author + " " + time + "</i>"
+                                    width: textWidth
+                                    wrapMode: Text.WordWrap
+                                    font.pixelSize: units.gu(2)
+                                    onLinkActivated: Qt.openUrlExternally(link)
+                                    color: "gray"
+                                }
+                                
+                                Text {
+                                    id: comment_text
+                                    text: model.text 
+                                    width: textWidth
+                                    wrapMode: Text.WordWrap
+                                    font.pixelSize: units.gu(2)
+                                    onLinkActivated: Qt.openUrlExternally(link)
+                                    textFormat: Text.RichText
+                                }
                             }
                                 
                                 Loader {
@@ -99,7 +114,7 @@ Flickable {
                                     property var text: model.text
                                     property var elements: model.elements
                                     // decrease text width on the next iteration, because tabs
-                                    property int textWidth : comment_text.width - units.gu(4)
+                                    property int textWidth : comment_text.width - units.gu(2)
                                     property bool expanded: true
                                     sourceComponent: model.elements ? treeBranch : undefined
                                     

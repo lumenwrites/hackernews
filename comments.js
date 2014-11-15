@@ -44,29 +44,35 @@ function appendTopLvlComment(comment_id){
 		var comment_text = "[dead]";
 	    }
 
+	    var time_ago = timeAgoFromEpochTime(comment["time"]);
+
 	    // Append Comment
 	    var hasKids = !(comment["kids"]===undefined);
-	    if (hasKids) {	    
-		treemodel.append( {text: comment_text,
-				   author: comment["by"],
-				   time: comment["time"],
-				   elements : []});
-	    } else {
-		treemodel.append( {text: comment_text,
-				   author: comment["by"],
-				   time: comment["time"]});
-	    }
+
+	    var check_exists = !!((comment["by"]) && (comment["text"]));
+	    if (check_exists) {
+		if (hasKids) {	    
+		    treemodel.append( {text: comment_text,
+				       author: comment["by"],
+				       time: time_ago,
+				       elements : []});
+		} else {
+		    treemodel.append( {text: comment_text,
+				       author: comment["by"],
+				       time: time_ago});
+		}
 		
-	    //Get last appended comment
-	    var lvl1node = treemodel.get(treemodel.count - 1);
-	    
-	    if (hasKids) {
-		var i = 0;
-		for (i = 0; i < comment["kids"].length ; i++) {
-		    var child_id = comment["kids"][i];
-		    recursiveAppendComments(lvl1node, child_id);
-		} // End top for loop.
-	    }
+		//Get last appended comment
+		var lvl1node = treemodel.get(treemodel.count - 1);
+		
+		if (hasKids) {
+		    var i = 0;
+		    for (i = 0; i < comment["kids"].length ; i++) {
+			var child_id = comment["kids"][i];
+			recursiveAppendComments(lvl1node, child_id);
+		    } // End top for loop.
+		}
+	    }		
 	    //****************
 	}
     }// End get comemnt data
@@ -88,30 +94,38 @@ function recursiveAppendComments(parent, comment_id){
 	    } else {
 		var comment_text = "[dead]";
 	    }
+
+	    var time_ago = timeAgoFromEpochTime(comment["time"]);
+	    
 	    // Append Coment
 	    var hasKids = !(comment["kids"]===undefined);
-	    if (hasKids) {
-		parent.elements.append( {text: comment_text,
-					 author: comment["by"],
-					 time: comment["time"],
-					 elements : []});
-	    } else {
-		parent.elements.append( {text: comment_text,
-					 author: comment["by"],
-					 time: comment["time"]});
-	    }
-	    //Get last appended comment
-	    parent = parent.elements.get(parent.elements.count - 1);
-	    
-	    
-	    if (hasKids) {
-		//Launch Recursion for all the children
-		var i = 0;
-		for (i = 0; i < comment["kids"].length ; i++) {
-		    var child_id = comment["kids"][i];
-		    recursiveAppendComments(parent, child_id);
-		} // End top for loop.
+	    var check_exists = !!((comment["by"]) && (comment["text"]));	    
+	    //console.log("Exists? " + check_exists);
+	    if (check_exists) {
+		if (hasKids) {
+		    parent.elements.append( {text: comment_text,
+					     author: comment["by"],
+					     time: time_ago,
+					     elements : []});
+		} else {
+		    parent.elements.append( {text: comment_text,
+					     author: comment["by"],
+					     time: time_ago});
+		}
 		
+		//Get last appended comment
+		parent = parent.elements.get(parent.elements.count - 1);
+		
+		
+		if (hasKids) {
+		    //Launch Recursion for all the children
+		    var i = 0;
+		    for (i = 0; i < comment["kids"].length ; i++) {
+			var child_id = comment["kids"][i];
+			recursiveAppendComments(parent, child_id);
+		    } // End top for loop.
+		    
+		}
 	    }
 	    //****************
 	}
@@ -119,3 +133,42 @@ function recursiveAppendComments(parent, comment_id){
     commentRequest.open("GET", url, true);
     commentRequest.send();
 }
+
+// Unix time to time ago
+function timeAgoFromEpochTime(epoch) {
+    var secs = ((new Date()).getTime() / 1000) - epoch;
+    Math.floor(secs);
+    var minutes = secs / 60;
+    secs = Math.floor(secs % 60);
+    if (minutes < 1) {
+        return secs + (secs > 1 ? ' seconds ago' : ' second ago');
+    }
+    var hours = minutes / 60;
+    minutes = Math.floor(minutes % 60);
+    if (hours < 1) {
+        return minutes + (minutes > 1 ? ' minutes ago' : ' minute ago');
+    }
+    var days = hours / 24;
+    hours = Math.floor(hours % 24);
+    if (days < 1) {
+        return hours + (hours > 1 ? ' hours ago' : ' hour ago');
+    }
+    var weeks = days / 7;
+    days = Math.floor(days % 7);
+    if (weeks < 1) {
+        return days + (days > 1 ? ' days ago' : ' day ago');
+    }
+    var months = weeks / 4.35;
+    weeks = Math.floor(weeks % 4.35);
+    if (months < 1) {
+        return weeks + (weeks > 1 ? ' weeks ago' : ' week ago');
+    }
+    var years = months / 12;
+    months = Math.floor(months % 12);
+    if (years < 1) {
+        return months + (months > 1 ? ' months ago' : ' month ago');
+    }
+    years = Math.floor(years);
+    return years + (years > 1 ? ' years ago' : ' years ago');
+}
+
